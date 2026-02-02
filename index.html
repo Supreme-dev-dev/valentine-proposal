@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For Diya ❤️</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            overflow-x: hidden;
+            background: #000;
+            color: #fff;
+        }
+
+        /* Rejection message popup */
+        .rejection-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+            padding: 30px 50px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            z-index: 10000;
+            text-align: center;
+            font-size: 1.5rem;
+            animation: popIn 0.5s ease-out forwards;
+            pointer-events: none;
+            border: 3px solid rgba(255,255,255,0.5);
+        }
+
+        @keyframes popIn {
+            0% {
+                transform: translate(-50%, -50%) scale(0) rotate(-180deg);
+                opacity: 0;
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.2) rotate(10deg);
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1) rotate(0deg);
+                opacity: 1;
+            }
+        }
+
+        @keyframes popOut {
+            0% {
+                transform: translate(-50%, -50%) scale(1) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(0) rotate(180deg);
+                opacity: 0;
+            }
+        }
+
+        .section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+            position: relative;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 1.5s ease;
+        }
+
+        .section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Animated background hearts */
+        .hearts-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .heart-float {
+            position: absolute;
+            font-size: 20px;
+            animation: float 15s infinite;
+            opacity: 0.3;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.3;
+            }
+            90% {
+                opacity: 0.3;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Section 1: Opening */
+        #section1 {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .title {
+            font-size: 4rem;
+            margin-bottom: 30px;
+            text-align: center;
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% {
+                text-shadow: 0 0 20px rgba(255,255,255,0.5);
+            }
+            50% {
+                text-shadow: 0 0 40px rgba(255,255,255,0.8);
+            }
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            text-align: center;
+            font-style: italic;
+            opacity: 0.9;
+        }
+
+        /* Section 2: Apology */
+        #section2 {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .content-box {
+            max-width: 800px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+
+        .content-box h2 {
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .content-box p {
+            font-size: 1.2rem;
+            line-height: 2;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        /* Section 3: Memories */
+        #section3 {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin-top: 40px;
+        }
+
+        .memory-card {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255,255,255,0.3);
+            transform: translateY(20px);
+            opacity: 0;
+            transition: all 0.5s ease;
+        }
+
+        .memory-card.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .memory-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .memory-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+
+        .memory-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        /* Image sections */
+        .image-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin-top: 40px;
+        }
+
+        .image-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .image-container:hover {
+            transform: scale(1.05);
+        }
+
+        .image-container img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .image-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            padding: 30px 20px 20px;
+            color: white;
+            font-size: 1.1rem;
+            text-align: center;
+        }
+
+        /* Section 4: The Truth */
+        #section4 {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        /* Section 5: The Question */
+        #section5 {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+
+        .question-box {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 60px;
+            border-radius: 30px;
+            backdrop-filter: blur(10px);
+            border: 3px solid rgba(255,255,255,0.4);
+        }
+
+        .big-question {
+            font-size: 3rem;
+            margin-bottom: 50px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .button-container {
+            display: flex;
+            gap: 50px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            position: relative;
+            min-height: 200px;
+            width: 100%;
+            padding: 20px;
+        }
+
+        .btn {
+            padding: 20px 50px;
+            font-size: 1.5rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .btn-yes {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+            color: white;
+            position: relative;
+            z-index: 10;
+        }
+
+        .btn-yes:hover {
+            transform: scale(1.1);
+            box-shadow: 0 15px 40px rgba(255,107,107,0.5);
+        }
+
+        .btn-no {
+            background: rgba(255, 255, 255, 0.3);
+            color: white;
+            position: absolute;
+            transition: all 0.3s ease;
+            right: 20%;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .btn-no:hover {
+            background: rgba(255, 255, 255, 0.4);
+            transform: translateY(-50%) scale(0.9);
+        }
+
+        .btn-no.shrinking {
+            animation: shrink 0.3s ease-out forwards;
+        }
+
+        @keyframes shrink {
+            0% {
+                transform: translateY(-50%) scale(1);
+            }
+            50% {
+                transform: translateY(-50%) scale(0.8);
+            }
+            100% {
+                transform: translateY(-50%) scale(0.7);
+            }
+        }
+
+        /* Final Section */
+        #final-section {
+            background: linear-gradient(135deg, #ff0844 0%, #ffb199 100%);
+            display: none;
+        }
+
+        .celebration {
+            text-align: center;
+        }
+
+        .celebration h1 {
+            font-size: 4rem;
+            margin-bottom: 30px;
+            animation: celebrate 1s ease-in-out;
+        }
+
+        .excitement-message {
+            font-size: 1.5rem;
+            margin: 30px auto;
+            max-width: 800px;
+            line-height: 1.8;
+            background: rgba(255,255,255,0.1);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            animation: slideInUp 1s ease-out;
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .video-container {
+            margin-top: 40px;
+            max-width: 800px;
+            width: 100%;
+        }
+
+        .video-container video {
+            width: 100%;
+            height: 450px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+        }
+
+        @keyframes celebrate {
+            0%, 100% {
+                transform: scale(1) rotate(0deg);
+            }
+            25% {
+                transform: scale(1.2) rotate(-5deg);
+            }
+            75% {
+                transform: scale(1.2) rotate(5deg);
+            }
+        }
+
+        .heart-burst {
+            font-size: 3rem;
+            animation: burst 0.8s ease-out forwards;
+            display: inline-block;
+        }
+
+        @keyframes burst {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.5);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* Scroll indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateX(-50%) translateY(0);
+            }
+            40% {
+                transform: translateX(-50%) translateY(-20px);
+            }
+            60% {
+                transform: translateX(-50%) translateY(-10px);
+            }
+        }
+
+        .scroll-indicator::after {
+            content: '↓';
+            font-size: 2rem;
+            opacity: 0.7;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .title {
+                font-size: 2.5rem;
+            }
+            .subtitle {
+                font-size: 1.2rem;
+            }
+            .content-box {
+                padding: 30px;
+            }
+            .content-box h2 {
+                font-size: 2rem;
+            }
+            .content-box p {
+                font-size: 1rem;
+            }
+            .big-question {
+                font-size: 2rem;
+            }
+            .btn {
+                padding: 15px 30px;
+                font-size: 1.2rem;
+            }
+            .button-container {
+                min-height: 250px;
+                gap: 30px;
+            }
+            .btn-no {
+                right: 10%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Music - Auto-play -->
+    <audio id="bgMusic" autoplay loop>
+        <source src="C:\Users\ACER\Videos\supreme\material - Copy\Nirvik\romantic music.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Floating hearts background -->
+    <div class="hearts-background" id="heartsContainer"></div>
+
+    <!-- Section 1: Opening -->
+    <div class="section" id="section1">
+        <h1 class="title">Dear Diya</h1>
+        <p class="subtitle">There's something I need to tell you...</p>
+        <div class="scroll-indicator"></div>
+    </div>
+
+    <!-- Section 2: Apology & Truth -->
+    <div class="section" id="section2">
+        <div class="content-box">
+            <h2>I Know You're Angry...</h2>
+            <p>
+                And you have every right to be. I've replayed our last conversation a thousand times in my head, wishing I could take back the words that hurt you, wishing I could have been more patient, more understanding. The truth is, seeing you upset tears me apart in ways I can't even describe. Your smile is my favorite thing in this world, and knowing that I'm the reason it's missing right now feels like a weight on my chest that won't lift.
+            </p>
+            <p>
+                I'm not perfect, Diya. I make mistakes, I stumble over my words, and sometimes I don't express what's in my heart the way I should. But one thing has never wavered—my feelings for you. From the moment you walked into my life, everything changed. You brought color to my gray days, warmth to my coldest nights, and meaning to moments I thought were ordinary.
+            </p>
+        </div>
+        <div class="scroll-indicator"></div>
+    </div>
+
+    <!-- Section 3: Memories -->
+    <div class="section" id="section3">
+        <div class="content-box">
+            <h2>The Moments I Treasure</h2>
+            
+            <!-- Image Gallery - Your beautiful photos with Diya -->
+            <div class="image-gallery">
+                <div class="image-container">
+                    <img src="C:\Users\ACER\Videos\supreme\material - Copy\Nirvik\nirivk diya 3.jpeg" alt="Beautiful moment in traditional dress">
+                    <div class="image-caption">Every moment with you is magical ✨</div>
+                </div>
+                <div class="image-container">
+                    <img src="C:\Users\ACER\Videos\supreme\material - Copy\Nirvik\nirvik diya 2.jpeg" alt="Together with mountain backdrop">
+                    <div class="image-caption">Your smile lights up my world 💫</div>
+                </div>
+                <div class="image-container">
+                    <img src="C:\Users\ACER\Videos\supreme\material - Copy\Nirvik\nirvik diya 4.jpeg" alt="Our special shoes moment">
+                    <div class="image-caption">Walking through life together 💕</div>
+                </div>
+                <div class="image-container">
+                    <img src="C:\Users\ACER\Videos\supreme\material - Copy\Nirvik\nirvik diya.jpeg" alt="Cozy moment together">
+                    <div class="image-caption">Creating memories with you, Diya 💕</div>
+                </div>
+            </div>
+            
+            <div class="memory-grid">
+                <div class="memory-card">
+                    <h3>🌟 Your Laugh</h3>
+                    <p>The way your eyes light up when something genuinely amuses you. It's like watching the sun break through clouds.</p>
+                </div>
+                <div class="memory-card">
+                    <h3>💭 Our Late Night Talks</h3>
+                    <p>When the world sleeps and it's just us, sharing dreams, fears, and everything in between.</p>
+                </div>
+                <div class="memory-card">
+                    <h3>🎵 The Songs You Love</h3>
+                    <p>How you get lost in music, and how I get lost watching you lose yourself in the melody.</p>
+                </div>
+                <div class="memory-card">
+                    <h3>✨ Your Kindness</h3>
+                    <p>The way you care for everyone around you, making the world a little brighter just by being in it.</p>
+                </div>
+            </div>
+        </div>
+        <div class="scroll-indicator"></div>
+    </div>
+
+    <!-- Section 4: Deep Truth -->
+    <div class="section" id="section4">
+        <div class="content-box">
+            <h2>What You Mean to Me</h2>
+            <p>
+                I know I hurt you, and I can't erase that. But I need you to know that losing your trust, losing your happiness—that scares me more than anything else. You're not just someone I care about; you're the person I think about when I wake up, the one I want to share good news with, the one whose opinion matters most to me. You've become so deeply woven into who I am that I can't imagine my days without you in them.
+            </p>
+            <p>
+                This Valentine's Day, I don't want to just give you flowers or chocolates. I want to give you my promise—that I'll do better, that I'll listen more, that I'll fight for us even when things get hard. Because you're worth fighting for, Diya. You're worth every effort, every conversation, every moment of trying to be better. I want to be the person who makes you smile again, who earns back your trust, who proves that love isn't just a feeling but a choice I make every single day.
+            </p>
+        </div>
+        <div class="scroll-indicator"></div>
+    </div>
+
+    <!-- Section 5: The Question -->
+    <div class="section" id="section5">
+        <div class="question-box">
+            <p class="big-question">
+                Will you be my Valentine, Diya?
+            </p>
+            <p style="font-size: 1.3rem; margin-bottom: 40px; opacity: 0.9;">
+                Give me a chance to make things right. Let me show you how much you mean to me.
+            </p>
+            <div class="button-container">
+                <button class="btn btn-yes" onclick="sayYes()">Yes! ❤️</button>
+                <button class="btn btn-no" onclick="moveButton(event)">No</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Final Section -->
+    <div class="section visible" id="final-section">
+        <div class="celebration">
+            <h1>SHE SAID YES! 💕</h1>
+            <div style="font-size: 5rem; margin: 30px 0;">
+                <span class="heart-burst" style="animation-delay: 0s;">❤️</span>
+                <span class="heart-burst" style="animation-delay: 0.2s;">💖</span>
+                <span class="heart-burst" style="animation-delay: 0.4s;">💕</span>
+                <span class="heart-burst" style="animation-delay: 0.6s;">💗</span>
+                <span class="heart-burst" style="animation-delay: 0.8s;">💝</span>
+            </div>
+            
+            <div class="excitement-message">
+                <p style="margin-bottom: 20px;">
+                    I can't believe this is happening! My heart is racing, Diya! You just made me the happiest person alive. I've been waiting for this moment, hoping, praying that you'd give me another chance, and you did! 
+                </p>
+                <p style="margin-bottom: 20px;">
+                    I promise you won't regret this. Every single day, I'll show you how much you mean to me. I'll be better, I'll listen more, I'll cherish every moment we have together. This is just the beginning of something beautiful, and I can't wait to create a million more memories with you! 🌹
+                </p>
+                <p style="font-size: 1.8rem; font-weight: bold; color: #ffe0e0;">
+                    You're MY Valentine now, Diya! Forever! 💫
+                </p>
+            </div>
+
+            <!-- Video Container - Your special dance video -->
+            <div class="video-container">
+                <p style="font-size: 1.3rem; margin-bottom: 20px; opacity: 0.9;">A special message just for you...</p>
+                <video controls autoplay>
+                    <source src="C:\Users\ACER\Videos\supreme\material - Copy\Nirvik\Nirvik dance.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+
+            <p style="font-size: 1.5rem; margin-top: 40px; opacity: 0.9;">
+                Thank you for giving me this chance, Diya. Happy Valentine's Day, my love! 🌹✨
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Rejection messages that appear when trying to click No
+        const rejectionMessages = [
+            "Nope! Try again! 😏",
+            "You really thought? 💕",
+            "Not today, Diya! 😘",
+            "Wrong button, love! ❤️",
+            "The answer is YES! 💖",
+            "Can't escape from love! 💝",
+            "My heart says NO to your NO! 😊",
+            "Diya... really? Come on! 💗",
+            "I won't let you say no! 🌹",
+            "Love doesn't take NO for an answer! 💫"
+        ];
+
+        let noClickCount = 0;
+
+        // Auto-play music on page load (browsers may require user interaction first)
+        window.addEventListener('load', () => {
+            const bgMusic = document.getElementById('bgMusic');
+            // Try to play automatically
+            bgMusic.play().catch(e => {
+                console.log('Auto-play may be blocked by browser. Music will play after first interaction.');
+            });
+        });
+
+        // Also try to play on first user interaction
+        let musicStarted = false;
+        document.addEventListener('click', () => {
+            if (!musicStarted) {
+                const bgMusic = document.getElementById('bgMusic');
+                bgMusic.play().catch(e => console.log('Music play failed'));
+                musicStarted = true;
+            }
+        }, { once: true });
+
+        // Create floating hearts
+        function createFloatingHearts() {
+            const container = document.getElementById('heartsContainer');
+            const heartSymbols = ['❤️', '💕', '💖', '💗', '💝', '💘'];
+            
+            for (let i = 0; i < 20; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart-float';
+                heart.innerHTML = heartSymbols[Math.floor(Math.random() * heartSymbols.length)];
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.animationDelay = Math.random() * 15 + 's';
+                heart.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                container.appendChild(heart);
+            }
+        }
+
+        // Intersection Observer for scroll animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    
+                    // Animate memory cards
+                    const cards = entry.target.querySelectorAll('.memory-card');
+                    cards.forEach((card, index) => {
+                        setTimeout(() => {
+                            card.classList.add('show');
+                        }, index * 200);
+                    });
+                }
+            });
+        }, { threshold: 0.2 });
+
+        // Observe all sections
+        document.querySelectorAll('.section').forEach(section => {
+            observer.observe(section);
+        });
+
+        // Show rejection message
+        function showRejectionMessage(message) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'rejection-message';
+            messageDiv.innerHTML = `<strong>${message}</strong>`;
+            document.body.appendChild(messageDiv);
+
+            setTimeout(() => {
+                messageDiv.style.animation = 'popOut 0.5s ease-in forwards';
+                setTimeout(() => messageDiv.remove(), 500);
+            }, 1500);
+        }
+
+        // Button interactions - The NAUGHTY No button!
+        function sayYes() {
+            // Hide all sections except final
+            document.querySelectorAll('.section').forEach(section => {
+                if (section.id !== 'final-section') {
+                    section.style.display = 'none';
+                }
+            });
+            document.getElementById('final-section').style.display = 'flex';
+            
+            // Create massive celebration effect
+            createConfetti();
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function moveButton(event) {
+            event.preventDefault();
+            const button = event.target;
+            const yesButton = document.querySelector('.btn-yes');
+            const container = button.parentElement;
+            
+            // Show rejection message
+            const randomMessage = rejectionMessages[Math.floor(Math.random() * rejectionMessages.length)];
+            showRejectionMessage(randomMessage);
+            
+            // Make the No button shrink
+            button.classList.add('shrinking');
+            setTimeout(() => button.classList.remove('shrinking'), 300);
+            
+            // Increase no click count
+            noClickCount++;
+            
+            // Get container dimensions
+            const containerRect = container.getBoundingClientRect();
+            const buttonRect = button.getBoundingClientRect();
+            const yesRect = yesButton.getBoundingClientRect();
+            
+            // Calculate safe movement zone (far from Yes button)
+            let newX, newY;
+            let attempts = 0;
+            const minDistance = 250; // Minimum distance from Yes button
+            
+            do {
+                newX = Math.random() * (containerRect.width - buttonRect.width - 40) + 20;
+                newY = Math.random() * (containerRect.height - buttonRect.height - 40) + 20;
+                
+                // Calculate distance from Yes button
+                const yesX = yesRect.left - containerRect.left + yesRect.width / 2;
+                const yesY = yesRect.top - containerRect.top + yesRect.height / 2;
+                const buttonCenterX = newX + buttonRect.width / 2;
+                const buttonCenterY = newY + buttonRect.height / 2;
+                
+                const distance = Math.sqrt(
+                    Math.pow(buttonCenterX - yesX, 2) + 
+                    Math.pow(buttonCenterY - yesY, 2)
+                );
+                
+                attempts++;
+                
+                if (distance >= minDistance || attempts >= 100) {
+                    break;
+                }
+            } while (true);
+            
+            // Animate to new position
+            button.style.position = 'absolute';
+            button.style.left = newX + 'px';
+            button.style.top = newY + 'px';
+            button.style.transform = 'none';
+            button.style.transition = 'all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
+            
+            // Make the No button smaller each time
+            const currentSize = 1 - (noClickCount * 0.05);
+            if (currentSize > 0.3) {
+                setTimeout(() => {
+                    button.style.transform = `scale(${currentSize})`;
+                }, 50);
+            }
+            
+            // Make Yes button BIGGER and more attractive
+            const yesSize = 1 + (noClickCount * 0.1);
+            yesButton.style.transform = `scale(${yesSize})`;
+            yesButton.style.transition = 'all 0.5s ease';
+            
+            // Add pulse animation to Yes button
+            yesButton.style.animation = 'pulse 0.5s ease';
+            
+            // After 10 clicks, make No button nearly invisible
+            if (noClickCount >= 10) {
+                button.style.opacity = '0.2';
+                button.style.pointerEvents = 'none';
+                showRejectionMessage("Okay fine, I'm hiding now! Just say YES already! 💕");
+            }
+            
+            // Add a cute shake to the No button
+            button.style.animation = 'shake 0.5s ease';
+            setTimeout(() => {
+                button.style.animation = '';
+            }, 500);
+        }
+
+        // Add shake animation
+        const style = document.createElement('style');
+        style.innerHTML = `
+            @keyframes shake {
+                0%, 100% { transform: translateX(0) scale(var(--scale, 1)); }
+                10%, 30%, 50%, 70%, 90% { transform: translateX(-10px) scale(var(--scale, 1)); }
+                20%, 40%, 60%, 80% { transform: translateX(10px) scale(var(--scale, 1)); }
+            }
+            @keyframes fall {
+                to {
+                    transform: translateY(100vh) rotate(360deg);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        function createConfetti() {
+            const colors = ['#ff6b6b', '#ee5a6f', '#ff8787', '#ffa8a8', '#ffc9c9', '#FFD700', '#FF69B4'];
+            const shapes = ['❤️', '💕', '💖', '💗', '💝', '🌹', '✨', '💫', '⭐'];
+            
+            for (let i = 0; i < 150; i++) {
+                const confetti = document.createElement('div');
+                const isShape = Math.random() > 0.5;
+                
+                if (isShape) {
+                    confetti.textContent = shapes[Math.floor(Math.random() * shapes.length)];
+                    confetti.style.fontSize = (Math.random() * 20 + 20) + 'px';
+                } else {
+                    confetti.style.width = '10px';
+                    confetti.style.height = '10px';
+                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.borderRadius = '50%';
+                }
+                
+                confetti.style.position = 'fixed';
+                confetti.style.left = Math.random() * 100 + '%';
+                confetti.style.top = '-50px';
+                confetti.style.pointerEvents = 'none';
+                confetti.style.zIndex = '1000';
+                confetti.style.animation = `fall ${Math.random() * 3 + 2}s linear forwards`;
+                document.body.appendChild(confetti);
+                
+                setTimeout(() => confetti.remove(), 5000);
+            }
+            
+            // Add extra burst effect
+            setTimeout(() => createConfetti(), 500);
+        }
+
+        // Initialize
+        createFloatingHearts();
+
+        // Smooth scroll
+        document.addEventListener('DOMContentLoaded', () => {
+            const sections = document.querySelectorAll('.section');
+            sections[0].classList.add('visible');
+        });
+
+        // Prevent right-click on No button (extra naughty!)
+        document.addEventListener('contextmenu', (e) => {
+            if (e.target.classList.contains('btn-no')) {
+                e.preventDefault();
+                showRejectionMessage("Nice try! No cheating! 😜");
+            }
+        });
+    </script>
+</body>
+</html>
